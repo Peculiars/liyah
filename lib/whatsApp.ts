@@ -9,9 +9,9 @@ export function buildWhatsAppUrl(
   let text: string
 
   if (pieceTitle) {
-    text = `Hi Liyah! I'm ${name}${phone ? ` (${phone})` : ''}. I'd love something like your *${pieceTitle}* piece. Here's what I have in mind:\n\n${message}\n\n— Sent via Stylique website`
+    text = `Hi Liyahss Kouture! I'm ${name}${phone ? ` (${phone})` : ''}. I'd love something like your *${pieceTitle}* piece. Here's what I have in mind:\n\n${message}\n\n— Sent via Liyahss Kouture website`
   } else {
-    text = `Hi Liyah! I'm ${name}${phone ? ` (${phone})` : ''}. I'd like to book a custom piece. Here's what I have in mind:\n\n${message}\n\n— Sent via Stylique website`
+    text = `Hi Liyahss Kouture! I'm ${name}${phone ? ` (${phone})` : ''}. I'd like to book a custom piece. Here's what I have in mind:\n\n${message}\n\n— Sent via Liyahss Kouture website`
   }
 
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`

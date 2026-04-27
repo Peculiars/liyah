@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${dmSans.variable}`}>
       <head>
-        <title>Stylique by Liyah — Couture Reimagined</title>
+        <title>Liyahss Kouture — Couture Reimagined</title>
         <meta
           name="description"
           content="Bespoke fashion studio based in Lagos. Custom couture crafted for the woman and man who refuse to blend in."

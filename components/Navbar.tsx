@@ -14,6 +14,12 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Lock body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
   const links = [
     { href: '/portfolio', label: 'Portfolio' },
     { href: '/about', label: 'About' },
@@ -32,33 +38,35 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 100,
-          padding: scrolled ? '16px 48px' : '28px 48px',
+          padding: scrolled
+            ? 'clamp(12px,2vw,16px) clamp(16px,5vw,48px)'
+            : 'clamp(16px,3vw,28px) clamp(16px,5vw,48px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           transition: 'padding 0.4s ease, background 0.4s ease',
-          background: scrolled
-            ? 'rgba(13, 11, 9, 0.92)'
-            : 'transparent',
+          background: scrolled ? 'rgba(13,11,9,0.93)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
           borderBottom: scrolled
-            ? '1px solid rgba(184, 150, 90, 0.1)'
+            ? '1px solid rgba(184,150,90,0.1)'
             : '1px solid transparent',
         }}
       >
+        {/* Logo */}
         <Link
           href="/"
           style={{
             fontFamily: 'var(--font-cormorant)',
-            fontSize: 22,
+            fontSize: 'clamp(17px, 3vw, 22px)',
             fontWeight: 300,
-            letterSpacing: '0.12em',
+            letterSpacing: '0.1em',
             color: 'var(--cream)',
             textDecoration: 'none',
+            flexShrink: 0,
           }}
         >
-          Stylique{' '}
-          <span style={{ color: 'var(--gold)' }}>by Liyah</span>
+          Liyahss{' '}
+          <span style={{ color: 'var(--gold)' }}>Kouture</span>
         </Link>
 
         {/* Desktop links */}
@@ -70,7 +78,7 @@ export default function Navbar() {
             margin: 0,
             padding: 0,
           }}
-          className="hidden md:flex"
+          className="nav-desktop-links"
         >
           {links.map((l) => (
             <li key={l.href}>
@@ -88,8 +96,7 @@ export default function Navbar() {
                   ((e.target as HTMLElement).style.color = 'var(--gold)')
                 }
                 onMouseLeave={(e) =>
-                  ((e.target as HTMLElement).style.color =
-                    'rgba(249,245,239,0.7)')
+                  ((e.target as HTMLElement).style.color = 'rgba(249,245,239,0.7)')
                 }
               >
                 {l.label}
@@ -98,8 +105,10 @@ export default function Navbar() {
           ))}
         </ul>
 
+        {/* Desktop CTA */}
         <Link
           href="/book"
+          className="nav-desktop-cta"
           style={{
             fontSize: 11,
             letterSpacing: '0.18em',
@@ -111,8 +120,8 @@ export default function Navbar() {
             textDecoration: 'none',
             transition: 'all 0.4s',
             display: 'inline-block',
+            whiteSpace: 'nowrap',
           }}
-          className="hidden md:inline-block"
           onMouseEnter={(e) => {
             const el = e.currentTarget as HTMLElement
             el.style.background = 'var(--gold)'
@@ -127,19 +136,20 @@ export default function Navbar() {
           Book a Piece
         </Link>
 
-        {/* Mobile hamburger */}
+        {/* Hamburger */}
         <button
-          className="md:hidden"
+          className="nav-hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
           style={{
             background: 'none',
             border: 'none',
             padding: 8,
-            display: 'flex',
+            display: 'none',
             flexDirection: 'column',
             gap: 5,
+            zIndex: 101,
           }}
-          aria-label="Toggle menu"
         >
           <span
             style={{
@@ -174,65 +184,86 @@ export default function Navbar() {
         </button>
       </motion.nav>
 
-      {/* Mobile menu */}
+      {/* Mobile fullscreen menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
+            animate={{ opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
+            exit={{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
+            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
             style={{
               position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: 'rgba(13,11,9,0.97)',
+              inset: 0,
+              background: 'rgba(13,11,9,0.98)',
               zIndex: 99,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 40,
+              gap: 36,
             }}
           >
-            {links.map((l) => (
-              <Link
+            {links.map((l, i) => (
+              <motion.div
                 key={l.href}
-                href={l.href}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 + i * 0.07, duration: 0.5 }}
+              >
+                <Link
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  style={{
+                    fontFamily: 'var(--font-cormorant)',
+                    fontSize: 'clamp(36px, 10vw, 56px)',
+                    fontWeight: 300,
+                    fontStyle: 'italic',
+                    color: 'var(--cream)',
+                    textDecoration: 'none',
+                    letterSpacing: '0.04em',
+                    display: 'block',
+                    textAlign: 'center',
+                  }}
+                >
+                  {l.label}
+                </Link>
+              </motion.div>
+            ))}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <Link
+                href="/book"
                 onClick={() => setMenuOpen(false)}
                 style={{
-                  fontFamily: 'var(--font-cormorant)',
-                  fontSize: 48,
-                  fontWeight: 300,
-                  fontStyle: 'italic',
-                  color: 'var(--cream)',
+                  fontSize: 11,
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  color: 'var(--gold)',
                   textDecoration: 'none',
-                  letterSpacing: '0.05em',
+                  border: '1px solid rgba(184,150,90,0.4)',
+                  padding: '14px 36px',
+                  marginTop: 16,
+                  display: 'inline-block',
                 }}
               >
-                {l.label}
+                Book a Piece
               </Link>
-            ))}
-            <Link
-              href="/book"
-              onClick={() => setMenuOpen(false)}
-              style={{
-                fontSize: 11,
-                letterSpacing: '0.25em',
-                textTransform: 'uppercase',
-                color: 'var(--gold)',
-                textDecoration: 'none',
-                border: '1px solid rgba(184,150,90,0.4)',
-                padding: '14px 32px',
-                marginTop: 20,
-              }}
-            >
-              Book a Piece
-            </Link>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .nav-desktop-links { display: none !important; }
+          .nav-desktop-cta { display: none !important; }
+          .nav-hamburger { display: flex !important; }
+        }
+      `}</style>
     </>
   )
 }

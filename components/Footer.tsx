@@ -34,7 +34,7 @@ export default function Footer() {
               color: 'var(--cream)',
             }}
           >
-            Stylique <span style={{ color: 'var(--gold)' }}>by Liyah</span>
+            Liyahss <span style={{ color: 'var(--gold)' }}>Kouture</span>
           </div>
           <p
             style={{
@@ -161,7 +161,7 @@ export default function Footer() {
             letterSpacing: '0.05em',
           }}
         >
-          © {year} Stylique by Liyah. All rights reserved. Lagos, Nigeria.
+          © {year} Liyahss Kouture. All rights reserved. Lagos, Nigeria.
         </span>
         <div style={{ display: 'flex', gap: 24 }}>
           {[

@@ -12,7 +12,7 @@ interface BookingFormProps {
 
 export default function BookingForm({
   piece,
-  whatsappNumber = '2348000000000',
+  whatsappNumber = '+2348060995158',
 }: BookingFormProps) {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')

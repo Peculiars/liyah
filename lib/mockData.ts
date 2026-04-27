@@ -147,9 +147,9 @@ export const mockPieces: Piece[] = [
 ]
 
 export const mockSettings: SiteSettings = {
-  whatsappNumber: '2348000000000',
+  whatsappNumber: '+2348060995158',
   brandBio:
-    'Stylique by Liyah is a Lagos-born couture studio where every commission begins with a conversation. We translate who you are into fabric, structure, and silhouette.',
+    'Liyahss Kouture is a Lagos-born couture studio where every commission begins with a conversation. We translate who you are into fabric, structure, and silhouette.',
   heroTitle: 'Where Fabric Becomes Feeling',
   heroSubtitle:
     'Bespoke creations crafted for the woman and man who refuse to be dressed — only adorned. Every thread tells your story.',
