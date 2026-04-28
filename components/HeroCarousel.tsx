@@ -9,7 +9,7 @@ const slides = [
   {
     id: 1,
     mediaType: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1400&q=85',
+    src: 'https://res.cloudinary.com/deym5qcv5/image/upload/v1777398262/stylique/pieces/fp51pudev8lntwznwq1e.jpg',
     headline: ['Where Fabric', 'Becomes', 'Feeling.'],
     italicIndex: 2,
     sub: 'Bespoke creations crafted for those who refuse to be dressed — only adorned.',
@@ -17,7 +17,7 @@ const slides = [
   {
     id: 2,
     mediaType: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1400&q=85',
+    src: 'https://res.cloudinary.com/deym5qcv5/image/upload/v1777398203/stylique/pieces/glz0dcvwoye5pbvn5gdw.jpg',
     headline: ['Crafted for', 'Curves,', 'Culture & Class.'],
     italicIndex: 1,
     sub: 'Every commission begins with a conversation and ends with a masterpiece.',
@@ -25,7 +25,7 @@ const slides = [
   {
     id: 3,
     mediaType: 'image' as const,
-    src: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=1400&q=85',
+    src: 'https://res.cloudinary.com/deym5qcv5/image/upload/v1777398183/stylique/pieces/hx7aaipxit1ygufwbeks.jpg',
     headline: ['Tailored', 'to Slay,', 'Made Not Bought.'],
     italicIndex: 0,
     sub: 'From Lagos with love — where African elegance meets contemporary couture.',
