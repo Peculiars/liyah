@@ -1,18 +1,45 @@
-import type { BookingInquiry } from '@/types'
+interface WhatsAppMessageParams {
+  name: string
+  phone: string
+  message: string
+  piece?: {
+    title: string
+    category: string
+    gender: string
+  } | null
+  whatsappNumber: string
+}
 
-export function buildWhatsAppUrl(
-  whatsappNumber: string,
-  inquiry: BookingInquiry
-): string {
-  const { name, phone, message, pieceTitle } = inquiry
+export function buildWhatsAppUrl({
+  name,
+  phone,
+  message,
+  piece,
+  whatsappNumber,
+}: WhatsAppMessageParams): string {
+  // Clean the number — remove spaces, dashes, brackets
+  const cleanNumber = whatsappNumber.replace(/[\s\-\(\)]/g, '')
 
   let text: string
 
-  if (pieceTitle) {
-    text = `Hi Liyahss Kouture! I'm ${name}${phone ? ` (${phone})` : ''}. I'd love something like your *${pieceTitle}* piece. Here's what I have in mind:\n\n${message}\n\n— Sent via Liyahss Kouture website`
+  if (piece) {
+    text = `Hi Liyah! I'm ${name} (${phone}).
+
+I'd love something like your *${piece.title}* piece (${piece.gender}, ${piece.category}).
+
+Here's what I have in mind:
+${message}
+
+Looking forward to hearing from you! 🖤`
   } else {
-    text = `Hi Liyahss Kouture! I'm ${name}${phone ? ` (${phone})` : ''}. I'd like to book a custom piece. Here's what I have in mind:\n\n${message}\n\n— Sent via Liyahss Kouture website`
+    text = `Hi Liyah! I'm ${name} (${phone}).
+
+I'd like to commission a custom piece. Here's what I have in mind:
+${message}
+
+Looking forward to hearing from you! 🖤`
   }
 
-  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`
+  const encoded = encodeURIComponent(text)
+  return `https://wa.me/${cleanNumber}?text=${encoded}`
 }
