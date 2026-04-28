@@ -7,11 +7,13 @@ import { requireAdmin } from '@/lib/auth'
 // GET /api/pieces/[id] — public
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+
   try {
     await connectDB()
-    const piece = await Piece.findById(params.id).lean()
+    const piece = await Piece.findById(id).lean()
 
     if (!piece) {
       return NextResponse.json(
@@ -33,8 +35,10 @@ export async function GET(
 // PATCH /api/pieces/[id] — admin only
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+
   try {
     const session = await requireAdmin()
     if (!session) {
@@ -59,7 +63,7 @@ export async function PATCH(
     if (body.description) body.description = body.description.trim()
 
     const piece = await Piece.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     )
@@ -84,8 +88,10 @@ export async function PATCH(
 // DELETE /api/pieces/[id] — admin only
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+
   try {
     const session = await requireAdmin()
     if (!session) {
@@ -94,7 +100,7 @@ export async function DELETE(
 
     await connectDB()
 
-    const piece = await Piece.findById(params.id)
+    const piece = await Piece.findById(id)
     if (!piece) {
       return NextResponse.json(
         { success: false, error: 'Piece not found' },
@@ -110,7 +116,7 @@ export async function DELETE(
       ).catch((err) => console.warn('Cloudinary delete failed:', err))
     }
 
-    await Piece.findByIdAndDelete(params.id)
+    await Piece.findByIdAndDelete(id)
 
     return NextResponse.json({ success: true, message: 'Piece deleted' })
   } catch (error: any) {

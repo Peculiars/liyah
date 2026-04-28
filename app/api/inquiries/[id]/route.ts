@@ -6,8 +6,10 @@ import { requireAdmin } from '@/lib/auth'
 // PATCH /api/inquiries/[id] — admin only, update status
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+
   try {
     const session = await requireAdmin()
     if (!session) {
@@ -27,7 +29,7 @@ export async function PATCH(
     }
 
     const inquiry = await Inquiry.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: { status } },
       { new: true }
     )
@@ -52,8 +54,10 @@ export async function PATCH(
 // DELETE /api/inquiries/[id] — admin only
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await context.params
+
   try {
     const session = await requireAdmin()
     if (!session) {
@@ -62,7 +66,7 @@ export async function DELETE(
 
     await connectDB()
 
-    const inquiry = await Inquiry.findByIdAndDelete(params.id)
+    const inquiry = await Inquiry.findByIdAndDelete(id)
     if (!inquiry) {
       return NextResponse.json(
         { success: false, error: 'Inquiry not found' },

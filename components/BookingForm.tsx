@@ -35,12 +35,12 @@ export default function BookingForm({
     }
     setErrors({})
 
-    const url = buildWhatsAppUrl(whatsappNumber, {
+    const url = buildWhatsAppUrl({
+      whatsappNumber,
       name,
       phone,
       message,
-      pieceTitle: piece?.title,
-      pieceId: piece?._id,
+      piece,
     })
     window.open(url, '_blank')
   }
