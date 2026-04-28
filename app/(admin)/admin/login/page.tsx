@@ -26,7 +26,7 @@ export default function AdminLoginPage() {
     if (result?.error) {
       setError('Invalid username or password')
     } else {
-      router.push('/admin/dashboard')
+      router.push('/admin')
     }
   }
 

@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
 import './globals.css'
 import CustomCursor from '@/components/CustomCursor'
+import { SessionProvider } from 'next-auth/react'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -35,8 +36,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <CustomCursor />
-        {children}
+        <SessionProvider>
+          <CustomCursor />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   )
