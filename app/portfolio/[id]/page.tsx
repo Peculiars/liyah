@@ -1,6 +1,3 @@
-'use client'
-
-import { use } from 'react'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -9,7 +6,10 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PieceCard from '@/components/PieceCard'
 import BookingForm from '@/components/BookingForm'
-import { mockPieces, mockSettings } from '@/lib/mockData'
+import { connectDB } from '@/lib/mongodb'
+import Piece from '@/models/Piece'
+import SiteSettings from '@/models/Settings'
+import type { Piece as PieceType } from '@/types'
 
 const categoryLabels: Record<string, string> = {
   bridal: 'Bridal',
@@ -20,19 +20,42 @@ const categoryLabels: Record<string, string> = {
   custom: 'Custom Request',
 }
 
-export default function PieceDetailPage({
+export default async function PieceDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: { id: string }
 }) {
-  const { id } = use(params)
-  const piece = mockPieces.find((p) => p._id === id)
-  if (!piece) notFound()
+  await connectDB()
+  const pieceDoc = await Piece.findById(params.id).lean()
+  if (!pieceDoc) notFound()
 
-  const related = mockPieces
+  let settings = await SiteSettings.findOne().lean()
+  if (!settings) {
+    const created = await SiteSettings.create({})
+    settings = created.toObject()
+  }
+
+  const whatsappNumber = settings.whatsappNumber ?? '+2348060995158'
+
+  const piece = {
+    _id: pieceDoc._id.toString(),
+    title: pieceDoc.title,
+    description: pieceDoc.description,
+    category: pieceDoc.category,
+    gender: pieceDoc.gender,
+    mediaType: pieceDoc.mediaType,
+    mediaUrl: pieceDoc.mediaUrl,
+    thumbnailUrl: pieceDoc.thumbnailUrl,
+    tags: pieceDoc.tags || [],
+    isFeatured: pieceDoc.isFeatured,
+    createdAt: pieceDoc.createdAt ? pieceDoc.createdAt.toISOString() : '',
+  } as unknown as PieceType & { createdAt: string }
+
+  const allPieces = await Piece.find().lean()
+  const related = (allPieces as any[])
     .filter(
       (p) =>
-        p._id !== piece._id &&
+        p._id.toString() !== piece._id.toString() &&
         (p.category === piece.category || p.gender === piece.gender)
     )
     .slice(0, 3)
@@ -398,7 +421,7 @@ export default function PieceDetailPage({
           </p>
           <BookingForm
             piece={piece}
-            whatsappNumber={mockSettings.whatsappNumber}
+            whatsappNumber={whatsappNumber}
           />
         </motion.div>
       </section>

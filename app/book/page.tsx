@@ -1,10 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import BookingForm from '@/components/BookingForm'
-import { mockSettings } from '@/lib/mockData'
+import type { SiteSettings } from '@/types'
 
 const steps = [
   {
@@ -30,6 +31,24 @@ const steps = [
 ]
 
 export default function BookPage() {
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings')
+        const data = await res.json()
+        if (data.success) setSettings(data.data)
+      } catch (err) {
+        console.error('Failed to load settings:', err)
+      }
+    }
+    loadSettings()
+  }, [])
+
+  const instagramUrl = settings?.instagramUrl ?? 'https://www.instagram.com/liyahss_kouture'
+  const tiktokUrl = settings?.tiktokUrl ?? 'https://www.tiktok.com/@liyahss_kouture'
+
   return (
     <main style={{ background: 'var(--charcoal)', minHeight: '100vh' }}>
       <Navbar />
@@ -347,12 +366,12 @@ export default function BookPage() {
               {[
                 {
                   label: 'Instagram',
-                  href: mockSettings.instagramUrl,
+                  href: instagramUrl,
                   handle: '@liyahss_kouture',
                 },
                 {
                   label: 'TikTok',
-                  href: mockSettings.tiktokUrl,
+                  href: tiktokUrl,
                   handle: '@liyahss_kouture',
                 },
               ].map((s) => (
@@ -432,7 +451,7 @@ export default function BookPage() {
           >
             Free and no-obligation. Liyah responds personally.
           </p>
-          <BookingForm whatsappNumber={mockSettings.whatsappNumber} />
+          <BookingForm whatsappNumber={settings?.whatsappNumber} />
         </motion.div>
       </section>
 

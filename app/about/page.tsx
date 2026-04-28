@@ -3,9 +3,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { mockSettings } from '@/lib/mockData'
+import type { SiteSettings } from '@/types'
 
 const values = [
   {
@@ -31,6 +32,23 @@ const values = [
 ]
 
 export default function AboutPage() {
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+
+  useEffect(() => {
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/settings')
+        const data = await res.json()
+        if (data.success) setSettings(data.data)
+      } catch (err) {
+        console.error('Failed to load settings:', err)
+      }
+    }
+    loadSettings()
+  }, [])
+
+  const brandBio = settings?.brandBio ?? 'Liyahss Kouture is a Lagos-born couture studio where every commission begins with a conversation.'
+
   return (
     <main style={{ background: 'var(--charcoal)', minHeight: '100vh' }}>
       <Navbar />

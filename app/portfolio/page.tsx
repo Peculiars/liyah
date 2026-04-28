@@ -2,8 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import Fuse from 'fuse.js'
-import { mockPieces } from '@/lib/mockData'
-import type { Gender, Category } from '@/types'
+import type { Gender, Category, Piece } from '@/types'
 import Navbar from '@/components/Navbar'
 import { AnimatePresence, motion } from 'framer-motion'
 import PieceCard from '@/components/PieceCard'
@@ -38,13 +37,27 @@ export default function PortfolioPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [genderFilter, setGenderFilter] = useState<GenderFilter>('all')
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
+  const [pieces, setPieces] = useState<Piece[]>([])
 
-  const fuse = useMemo(() => new Fuse(mockPieces, fuseOptions), [])
+  useEffect(() => {
+    async function loadPieces() {
+      try {
+        const res = await fetch('/api/pieces')
+        const data = await res.json()
+        if (data.success) setPieces(data.data)
+      } catch (err) {
+        console.error('Failed to load pieces:', err)
+      }
+    }
+    loadPieces()
+  }, [])
+
+  const fuse = useMemo(() => new Fuse(pieces, fuseOptions), [pieces])
 
   const filteredPieces = useMemo(() => {
     let results = searchQuery.trim()
       ? fuse.search(searchQuery).map((r) => r.item)
-      : mockPieces
+      : pieces
 
     if (genderFilter !== 'all') {
       results = results.filter((p) => p.gender === genderFilter)

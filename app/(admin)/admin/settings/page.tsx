@@ -29,6 +29,8 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
+  const [uploadingSlideIndex, setUploadingSlideIndex] = useState<number | null>(null)
+  const [uploadError, setUploadError] = useState('')
 
   useEffect(() => {
     loadSettings()
@@ -93,6 +95,33 @@ export default function AdminSettingsPage() {
     const newSlides = [...settings.heroSlides]
     newSlides[index] = { ...newSlides[index], [field]: value }
     setSettings({ ...settings, heroSlides: newSlides })
+  }
+
+  async function uploadHeroSlideImage(index: number, file: File) {
+    if (!settings) return
+    setUploadError('')
+    setUploadingSlideIndex(index)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (!res.ok || !data.success) {
+        setUploadError(data.error || 'Image upload failed')
+        return
+      }
+      updateHeroSlide(index, 'imageUrl', data.data.url)
+    } catch (err) {
+      console.error('Hero slide upload failed:', err)
+      setUploadError('Image upload failed')
+    } finally {
+      setUploadingSlideIndex(null)
+    }
   }
 
   if (loading) {
@@ -365,6 +394,31 @@ export default function AdminSettingsPage() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 11, color: 'rgba(249,245,239,0.6)', marginBottom: 4 }}>
+                      Upload Slide Image
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) uploadHeroSlideImage(index, file)
+                      }}
+                      disabled={uploadingSlideIndex === index}
+                      style={{ ...inputStyle, padding: '10px 12px' }}
+                    />
+                    {uploadingSlideIndex === index && (
+                      <div style={{ fontSize: 11, color: 'rgba(249,245,239,0.7)', marginTop: 8 }}>
+                        Uploading image...
+                      </div>
+                    )}
+                    {uploadError && uploadingSlideIndex === index && (
+                      <div style={{ fontSize: 11, color: 'rgba(220,100,100,0.9)', marginTop: 8 }}>
+                        {uploadError}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, color: 'rgba(249,245,239,0.6)', marginBottom: 4 }}>
                       Image URL
                     </label>
                     <input
@@ -374,6 +428,15 @@ export default function AdminSettingsPage() {
                       style={inputStyle}
                     />
                   </div>
+                  {slide.imageUrl && (
+                    <div style={{ marginTop: 12 }}>
+                      <img
+                        src={slide.imageUrl}
+                        alt={`Slide ${index + 1}`}
+                        style={{ width: '100%', borderRadius: 8, border: '1px solid rgba(184,150,90,0.15)' }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

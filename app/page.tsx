@@ -1,14 +1,15 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { mockPieces, mockSettings } from '@/lib/mockData'
 import Navbar from '@/components/Navbar'
 import HeroCarousel from '@/components/HeroCarousel'
 import PieceCard from '@/components/PieceCard'
 import BookingForm from '@/components/BookingForm'
 import Footer from '@/components/Footer'
+import type { Piece, SiteSettings } from '@/types'
 
 const marqueeItems = [
   'Couture Reimagined', '✦', 'Curves, Culture & Class', '✦',
@@ -38,7 +39,42 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
-  const featuredPieces = mockPieces.filter((p) => p.isFeatured).slice(0, 6)
+  const [settings, setSettings] = useState<SiteSettings | null>(null)
+  const [featuredPieces, setFeaturedPieces] = useState<Piece[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      setLoading(true)
+      try {
+        const [settingsRes, piecesRes] = await Promise.all([
+          fetch('/api/settings'),
+          fetch('/api/pieces?featured=true&limit=6'),
+        ])
+        const settingsJson = await settingsRes.json()
+        const piecesJson = await piecesRes.json()
+        if (settingsJson.success) setSettings(settingsJson.data)
+        if (piecesJson.success) setFeaturedPieces(piecesJson.data)
+      } catch (err) {
+        console.error('Failed to load homepage data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
+
+  const heroBio = settings?.brandBio ?? 'Liyahss Kouture is a Lagos-born couture studio where every commission begins with a conversation.'
+  const stats = settings ? [
+    { num: settings.stats.followers, label: 'Followers' },
+    { num: settings.stats.piecesCreated, label: 'Pieces Created' },
+    { num: settings.stats.bespoke, label: 'Bespoke' },
+  ] : [
+    { num: '12K+', label: 'Followers' },
+    { num: '381', label: 'Pieces Created' },
+    { num: '100%', label: 'Bespoke' },
+  ]
 
   return (
     <main style={{ background: 'var(--charcoal)', minHeight: '100vh' }}>
@@ -114,18 +150,14 @@ export default function HomePage() {
             <em style={{ fontStyle: 'italic', color: 'var(--gold)' }}>refuse to blend in</em>
           </h2>
           <p style={{ fontSize: 14, lineHeight: 1.9, color: 'rgba(249,245,239,0.5)', marginBottom: 16, maxWidth: 440 }}>
-            {mockSettings.brandBio}
+            {heroBio}
           </p>
           <p style={{ fontSize: 14, lineHeight: 1.9, color: 'rgba(249,245,239,0.5)', marginBottom: 40, maxWidth: 440 }}>
             From bridal to boardroom, every piece is constructed with obsessive attention to fit, drape, and the quiet luxury that whispers rather than shouts.
           </p>
 
           <div style={{ display: 'flex', gap: 'clamp(20px, 5vw, 40px)', paddingTop: 32, borderTop: '1px solid rgba(184,150,90,0.15)', flexWrap: 'wrap' }}>
-            {[
-              { num: '12K+', label: 'Followers' },
-              { num: '381', label: 'Pieces Created' },
-              { num: '100%', label: 'Bespoke' },
-            ].map((s) => (
+            {stats.map((s) => (
               <div key={s.label}>
                 <span style={{ fontFamily: 'var(--font-cormorant)', fontSize: 'clamp(28px, 5vw, 36px)', fontWeight: 300, color: 'var(--gold)', display: 'block' }}>
                   {s.num}
@@ -207,7 +239,11 @@ export default function HomePage() {
             transition={{ duration: 0.8 }}
             className="portfolio-feature"
           >
-            <PieceCard piece={featuredPieces[0]} size="large" priority />
+            {featuredPieces[0] ? (
+              <PieceCard piece={featuredPieces[0]} size="large" priority />
+            ) : (
+              <div style={{ color: 'rgba(249,245,239,0.6)' }}>Loading featured pieces…</div>
+            )}
           </motion.div>
 
           {/* 4 medium cards */}
@@ -287,7 +323,7 @@ export default function HomePage() {
           transition={{ duration: 0.8, delay: 0.15 }}
           style={{ maxWidth: 560, margin: '0 auto', textAlign: 'left' }}
         >
-          <BookingForm whatsappNumber={mockSettings.whatsappNumber} />
+          <BookingForm whatsappNumber={settings?.whatsappNumber} />
         </motion.div>
       </section>
 

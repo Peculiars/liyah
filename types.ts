@@ -24,6 +24,13 @@ export interface Piece {
   createdAt: string
 }
 
+export interface HeroSlide {
+  headline: string[]
+  italicIndex: number
+  sub: string
+  imageUrl: string
+}
+
 export interface SiteSettings {
   whatsappNumber: string
   brandBio: string
@@ -31,6 +38,14 @@ export interface SiteSettings {
   heroSubtitle: string
   instagramUrl: string
   tiktokUrl: string
+  heroSlides: HeroSlide[]
+  stats: {
+    followers: string
+    piecesCreated: string
+    bespoke: string
+  }
+  aboutTagline: string
+  aboutBody: string
 }
 
 export interface BookingInquiry {

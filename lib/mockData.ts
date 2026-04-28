@@ -153,6 +153,16 @@ export const mockSettings: SiteSettings = {
   heroTitle: 'Where Fabric Becomes Feeling',
   heroSubtitle:
     'Bespoke creations crafted for the woman and man who refuse to be dressed — only adorned. Every thread tells your story.',
+  heroSlides: [],
+  stats: {
+    followers: '12k',
+    piecesCreated: '240',
+    bespoke: 'Custom tailoring for every client',
+  },
+  aboutTagline:
+    'Designing couture that celebrates individuality, heritage, and modern luxury.',
+  aboutBody:
+    'Liyahss Kouture blends traditional craftsmanship with contemporary fashion to create made-to-measure pieces for every occasion.',
   instagramUrl: 'https://instagram.com/liyahss_kouture',
   tiktokUrl: 'https://tiktok.com/@liyahss_kouture',
 }
