@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import MotionDiv from '@/components/MotionDiv'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import PieceCard from '@/components/PieceCard'
@@ -23,10 +23,11 @@ const categoryLabels: Record<string, string> = {
 export default async function PieceDetailPage({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   await connectDB()
-  const pieceDoc = await Piece.findById(params.id).lean()
+  const pieceDoc = await Piece.findById(id).lean()
   if (!pieceDoc) notFound()
 
   let settings = await SiteSettings.findOne().lean()
@@ -59,6 +60,19 @@ export default async function PieceDetailPage({
         (p.category === piece.category || p.gender === piece.gender)
     )
     .slice(0, 3)
+    .map((p) => ({
+      _id: p._id?.toString?.() ?? '',
+      title: p.title,
+      description: p.description,
+      category: p.category,
+      gender: p.gender,
+      mediaType: p.mediaType,
+      mediaUrl: p.mediaUrl,
+      thumbnailUrl: p.thumbnailUrl,
+      tags: p.tags || [],
+      isFeatured: p.isFeatured,
+      createdAt: p.createdAt ? new Date(p.createdAt).toISOString() : '',
+    })) as PieceType[]
 
   return (
     <main style={{ background: 'var(--charcoal)', minHeight: '100vh' }}>
@@ -118,7 +132,7 @@ export default async function PieceDetailPage({
         />
 
         {/* Breadcrumb */}
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.6 }}
@@ -136,27 +150,21 @@ export default async function PieceDetailPage({
         >
           <Link
             href="/portfolio"
+            className="hover-gold"
             style={{
               color: 'rgba(249,245,239,0.4)',
               textDecoration: 'none',
               transition: 'color 0.3s',
             }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.color = 'var(--gold)')
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.color =
-                'rgba(249,245,239,0.4)')
-            }
           >
             Portfolio
           </Link>
           <span style={{ color: 'rgba(184,150,90,0.4)' }}>›</span>
           <span style={{ color: 'rgba(249,245,239,0.6)' }}>{piece.title}</span>
-        </motion.div>
+        </MotionDiv>
 
         {/* Hero text */}
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -217,7 +225,7 @@ export default async function PieceDetailPage({
           >
             {piece.title}
           </h1>
-        </motion.div>
+        </MotionDiv>
       </section>
 
       {/* ─── CONTENT ─── */}
@@ -232,7 +240,7 @@ export default async function PieceDetailPage({
         className="detail-grid"
       >
         {/* Left — details */}
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -359,6 +367,7 @@ export default async function PieceDetailPage({
           {/* Back link */}
           <Link
             href="/portfolio"
+            className="hover-gold"
             style={{
               fontSize: 11,
               letterSpacing: '0.18em',
@@ -370,20 +379,13 @@ export default async function PieceDetailPage({
               gap: 10,
               transition: 'color 0.3s',
             }}
-            onMouseEnter={(e) =>
-              ((e.currentTarget as HTMLElement).style.color = 'var(--gold)')
-            }
-            onMouseLeave={(e) =>
-              ((e.currentTarget as HTMLElement).style.color =
-                'rgba(249,245,239,0.4)')
-            }
           >
             ← Back to Portfolio
           </Link>
-        </motion.div>
+        </MotionDiv>
 
         {/* Right — booking form */}
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.35 }}
@@ -423,7 +425,7 @@ export default async function PieceDetailPage({
             piece={piece}
             whatsappNumber={whatsappNumber}
           />
-        </motion.div>
+        </MotionDiv>
       </section>
 
       {/* ─── RELATED PIECES ─── */}
@@ -434,7 +436,7 @@ export default async function PieceDetailPage({
             borderTop: '1px solid rgba(184,150,90,0.08)',
           }}
         >
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -453,7 +455,7 @@ export default async function PieceDetailPage({
                 Love
               </em>
             </h2>
-          </motion.div>
+          </MotionDiv>
 
           <div
             style={{
@@ -464,7 +466,7 @@ export default async function PieceDetailPage({
             className="related-grid"
           >
             {related.map((p, i) => (
-              <motion.div
+              <MotionDiv
                 key={p._id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -472,7 +474,7 @@ export default async function PieceDetailPage({
                 transition={{ duration: 0.7, delay: i * 0.1 }}
               >
                 <PieceCard piece={p} size="medium" />
-              </motion.div>
+              </MotionDiv>
             ))}
           </div>
         </section>

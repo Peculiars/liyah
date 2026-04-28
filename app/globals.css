@@ -80,6 +80,12 @@ video {
   .text-gold {
     color: var(--gold);
   }
+  .hover-gold:hover {
+    color: var(--gold);
+  }
+  .hover-cream:hover {
+    color: var(--cream);
+  }
   .bg-dark {
     background-color: var(--dark);
   }

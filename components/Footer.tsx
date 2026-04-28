@@ -75,6 +75,7 @@ export default function Footer() {
                 <li key={l.href}>
                   <Link
                     href={l.href}
+                    className="hover-cream"
                     style={{
                       fontSize: 13,
                       color: 'rgba(249,245,239,0.45)',
@@ -82,13 +83,6 @@ export default function Footer() {
                       letterSpacing: '0.03em',
                       transition: 'color 0.3s',
                     }}
-                    onMouseEnter={(e) =>
-                      ((e.target as HTMLElement).style.color = 'var(--cream)')
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.target as HTMLElement).style.color =
-                        'rgba(249,245,239,0.45)')
-                    }
                   >
                     {l.label}
                   </Link>
@@ -121,19 +115,13 @@ export default function Footer() {
                 <li key={c}>
                   <Link
                     href={`/portfolio?category=${c.toLowerCase()}`}
+                    className="hover-cream"
                     style={{
                       fontSize: 13,
                       color: 'rgba(249,245,239,0.45)',
                       textDecoration: 'none',
                       transition: 'color 0.3s',
                     }}
-                    onMouseEnter={(e) =>
-                      ((e.target as HTMLElement).style.color = 'var(--cream)')
-                    }
-                    onMouseLeave={(e) =>
-                      ((e.target as HTMLElement).style.color =
-                        'rgba(249,245,239,0.45)')
-                    }
                   >
                     {c}
                   </Link>
@@ -174,6 +162,7 @@ export default function Footer() {
               href={s.href}
               target="_blank"
               rel="noopener noreferrer"
+              className="hover-gold"
               style={{
                 fontSize: 10,
                 letterSpacing: '0.2em',
@@ -182,13 +171,6 @@ export default function Footer() {
                 textDecoration: 'none',
                 transition: 'color 0.3s',
               }}
-              onMouseEnter={(e) =>
-                ((e.target as HTMLElement).style.color = 'var(--gold)')
-              }
-              onMouseLeave={(e) =>
-                ((e.target as HTMLElement).style.color =
-                  'rgba(249,245,239,0.3)')
-              }
             >
               {s.label}
             </a>
