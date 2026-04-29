@@ -3,7 +3,7 @@
 import { useSession, signOut } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const navItems = [
   {
@@ -63,12 +63,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { data: session, status } = useSession()
   const pathname = usePathname()
   const router = useRouter()
+  const [sidebarOpen, setSidebarOpen] = useState(true)
 
   useEffect(() => {
     if (status === 'unauthenticated' && pathname !== '/admin/login') {
       router.push('/admin/login')
     }
   }, [status, pathname, router])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarOpen(window.innerWidth >= 768)
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   // Don't render layout on login page
   if (pathname === '/admin/login') return <>{children}</>
@@ -91,21 +102,52 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#0F0D0B' }}>
+      <button
+        onClick={() => setSidebarOpen((open) => !open)}
+        aria-label="Toggle admin menu"
+        className="admin-sidebar-toggle"
+        style={{
+          display: 'none',
+          position: 'fixed',
+          top: 16,
+          left: 16,
+          zIndex: 110,
+          width: 44,
+          height: 44,
+          borderRadius: '50%',
+          border: '1px solid rgba(184,150,90,0.35)',
+          background: 'rgba(13,11,9,0.92)',
+          color: 'var(--gold)',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          fontSize: 11,
+          letterSpacing: '0.14em',
+          padding: 0,
+        }}
+      >
+        ☰
+      </button>
 
       {/* ── Sidebar ── */}
-      <aside style={{
-        width: 240,
-        background: '#0D0B09',
-        borderRight: '1px solid rgba(184,150,90,0.1)',
-        display: 'flex',
-        flexDirection: 'column',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        height: '100vh',
-        zIndex: 100,
-        flexShrink: 0,
-      }}>
+      <aside
+        className={sidebarOpen ? 'admin-sidebar open' : 'admin-sidebar'}
+        style={{
+          width: 240,
+          background: '#0D0B09',
+          borderRight: '1px solid rgba(184,150,90,0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          height: '100vh',
+          zIndex: 100,
+          flexShrink: 0,
+          transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s ease',
+        }}
+      >
         {/* Brand */}
         <div style={{
           padding: '28px 24px 24px',
@@ -139,6 +181,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => setSidebarOpen(false)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -212,10 +255,52 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
+      <div
+        className={sidebarOpen ? 'admin-sidebar-overlay open' : 'admin-sidebar-overlay'}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* ── Main content ── */}
-      <main style={{ marginLeft: 240, flex: 1, minHeight: '100vh' }}>
+      <main className="admin-main" style={{ marginLeft: 240, flex: 1, minHeight: '100vh' }}>
         {children}
       </main>
+
+      <style>{`
+        .admin-sidebar-toggle {
+          display: none;
+        }
+
+        .admin-sidebar-overlay {
+          display: none;
+        }
+
+        @media (max-width: 767px) {
+          .admin-sidebar-toggle {
+            display: flex !important;
+          }
+
+          .admin-sidebar {
+            width: 280px !important;
+            transform: translateX(-100%) !important;
+          }
+
+          .admin-sidebar.open {
+            transform: translateX(0) !important;
+          }
+
+          .admin-main {
+            margin-left: 0 !important;
+          }
+
+          .admin-sidebar-overlay.open {
+            display: block !important;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 90;
+          }
+        }
+      `}</style>
     </div>
   )
 }

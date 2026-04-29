@@ -27,8 +27,8 @@ export default function PieceCard({ piece, priority = false, size = 'medium' }: 
 
   const heights = {
     large: 'clamp(320px, 45vw, 540px)',
-    medium: 'clamp(220px, 30vw, 360px)',
-    small: 'clamp(180px, 22vw, 260px)',
+    medium: 'clamp(260px, 40vw, 420px)',
+    small: 'clamp(240px, 35vw, 340px)',
   }
 
   return (

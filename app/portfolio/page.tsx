@@ -159,9 +159,10 @@ export default function PortfolioPage() {
             flexWrap: 'wrap',
             justifyContent: 'space-between',
           }}
+          className="portfolio-filters"
         >
           {/* Search */}
-          <div style={{ position: 'relative', flex: '0 0 260px' }}>
+          <div className="filter-group filter-search" style={{ position: 'relative', flex: '1 1 260px', minWidth: 0 }}>
             <input
               type="text"
               value={searchQuery}
@@ -206,7 +207,7 @@ export default function PortfolioPage() {
           </div>
 
           {/* Gender filter */}
-          <div style={{ display: 'flex', gap: 4 }}>
+          <div className="filter-group" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {(['all', 'women', 'men', 'unisex'] as GenderFilter[]).map((g) => (
               <FilterButton
                 key={g}
@@ -219,7 +220,7 @@ export default function PortfolioPage() {
           </div>
 
           {/* Category filter */}
-          <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          <div className="filter-group" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {(
               [
                 'all',
@@ -323,6 +324,45 @@ export default function PortfolioPage() {
       <Footer />
 
       <style>{`
+        .portfolio-filters {
+          width: 100%;
+        }
+        .filter-group {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          align-items: center;
+        }
+
+        @media (max-width: 720px) {
+          .portfolio-filters {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+          }
+
+          .filter-group,
+          .portfolio-filters > span {
+            width: 100%;
+          }
+
+          .filter-group.filter-search {
+            min-width: 0;
+          }
+
+          .filter-group {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 4px;
+          }
+
+          .filter-group button {
+            flex: 0 0 auto;
+            white-space: nowrap;
+          }
+        }
+
         @media (max-width: 900px) {
           .portfolio-grid {
             grid-template-columns: repeat(2, 1fr) !important;
