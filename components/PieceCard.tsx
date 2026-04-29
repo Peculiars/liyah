@@ -26,9 +26,9 @@ export default function PieceCard({ piece, priority = false, size = 'medium' }: 
   const [hovered, setHovered] = useState(false)
 
   const heights = {
-    large: 'clamp(320px, 45vw, 540px)',
-    medium: 'clamp(260px, 40vw, 420px)',
-    small: 'clamp(240px, 35vw, 340px)',
+    large: 'clamp(420px, 70vw, 580px)',
+    medium: 'clamp(420px, 70vw, 520px)',
+    small: 'clamp(400px, 70vw, 460px)',
   }
 
   return (

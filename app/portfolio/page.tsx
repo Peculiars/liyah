@@ -76,8 +76,8 @@ export default function PortfolioPage() {
       {/* Page header */}
       <section
         style={{
-          paddingTop: 160,
-          paddingBottom: 64,
+          paddingTop: 120,
+          paddingBottom: 20,
           paddingLeft: 48,
           paddingRight: 48,
           borderBottom: '1px solid rgba(184,150,90,0.1)',
@@ -141,6 +141,7 @@ export default function PortfolioPage() {
 
       {/* Filters + Search */}
       <section
+        className="portfolio-filter-section"
         style={{
           padding: '32px 48px',
           borderBottom: '1px solid rgba(184,150,90,0.08)',
@@ -154,7 +155,7 @@ export default function PortfolioPage() {
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             gap: 24,
             flexWrap: 'wrap',
             justifyContent: 'space-between',
@@ -162,7 +163,7 @@ export default function PortfolioPage() {
           className="portfolio-filters"
         >
           {/* Search */}
-          <div className="filter-group filter-search" style={{ position: 'relative', flex: '1 1 260px', minWidth: 0 }}>
+          <div className="filter-group filter-search" style={{ position: 'relative', flex: '1 1 60px', minWidth: 0 }}>
             <input
               type="text"
               value={searchQuery}
@@ -244,6 +245,7 @@ export default function PortfolioPage() {
 
           {/* Result count */}
           <span
+            className="filter-count"
             style={{
               fontSize: 11,
               letterSpacing: '0.1em',
@@ -324,6 +326,10 @@ export default function PortfolioPage() {
       <Footer />
 
       <style>{`
+        .portfolio-filter-section {
+          width: 100%;
+        }
+
         .portfolio-filters {
           width: 100%;
         }
@@ -334,15 +340,23 @@ export default function PortfolioPage() {
           align-items: center;
         }
 
+        .filter-count {
+          min-width: 112px;
+        }
+
         @media (max-width: 720px) {
+          .portfolio-filter-section {
+            padding: 24px 20px !important;
+          }
+
           .portfolio-filters {
             flex-direction: column;
             align-items: stretch;
-            gap: 16px;
+            gap: 12px;
           }
 
           .filter-group,
-          .portfolio-filters > span {
+          .filter-count {
             width: 100%;
           }
 
