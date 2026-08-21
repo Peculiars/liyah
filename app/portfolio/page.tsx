@@ -208,7 +208,7 @@ export default function PortfolioPage() {
           </div>
 
           {/* Gender filter */}
-          <div className="filter-group" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+          {/* <div className="filter-group" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {(['all', 'women', 'men', 'unisex'] as GenderFilter[]).map((g) => (
               <FilterButton
                 key={g}
@@ -218,10 +218,10 @@ export default function PortfolioPage() {
                 {g === 'all' ? 'All' : g.charAt(0).toUpperCase() + g.slice(1)}
               </FilterButton>
             ))}
-          </div>
+          </div> */}
 
           {/* Category filter */}
-          <div className="filter-group" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
+         {/* <div className="filter-group" style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>
             {(
               [
                 'all',
@@ -241,7 +241,7 @@ export default function PortfolioPage() {
                 {categoryLabels[c]}
               </FilterButton>
             ))}
-          </div>
+          </div> */}
 
           {/* Result count */}
           <span
