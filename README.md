@@ -36,6 +36,20 @@ Required environment variables
 Optional / notes
 - The admin seed script reads `MONGODB_URI` from `.env.local`; see [scripts/seedAdmin.ts](scripts/seedAdmin.ts#L1) for usage and defaults.
 
+Generate `NEXTAUTH_SECRET`
+
+You should use a strong, random secret for `NEXTAUTH_SECRET`. Generate one locally with either of these commands and paste the output into `.env.local` or `.env.local.example`:
+
+```bash
+# Node (works on Windows, macOS, Linux)
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+# OpenSSL (macOS / Linux / WSL)
+openssl rand -hex 32
+```
+
+An `.env.local.example` file is included in the repo — copy it to `.env.local` and fill in your real values.
+
 Seeding an initial admin user
 
 Run the script once to create an initial admin account (change the defaults inside the file before running):
@@ -63,14 +77,11 @@ Project layout highlights
 - Seed script: [scripts/seedAdmin.ts](scripts/seedAdmin.ts#L1)
 
 Deployment
-- This project is compatible with Vercel; set the required environment variables in your deployment provider.
+- This project is compatible with Vercel; set the required environment variables in your deployment provider
 
 Security notes
 - Keep `NEXTAUTH_SECRET` and Cloudinary API secrets out of source control. Use `.env.local` for local development and secure secret storage in production.
 
 Contributing
 - Open issues or PRs. For code style, follow existing TypeScript and ESLint rules.
-
-Questions or next steps
-- Want me to add a sample `.env.local.example` or commit these changes? I can add that next.
 
