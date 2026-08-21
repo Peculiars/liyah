@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+**Liyah (Stylique)**
 
-## Getting Started
+This repository is a Next.js (App Router + TypeScript) portfolio/shop for commissioned pieces with an admin panel, Cloudinary uploads, and MongoDB storage.
 
-First, run the development server:
+**Tech stack:**
+- **Framework:** Next.js (App Router)
+- **Language:** TypeScript
+- **DB:** MongoDB (mongoose)
+- **Auth:** next-auth (credentials provider)
+- **Storage:** Cloudinary
+- **Styling:** Tailwind / PostCSS
+
+**Quick Start**
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Create a local environment file `.env.local` with the values below.
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 to view the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Required environment variables
+- `MONGODB_URI` — MongoDB connection string (used by [lib/mongodb.ts](lib/mongodb.ts#L1)).
+- `NEXTAUTH_SECRET` — secret used by NextAuth ([lib/authOptions.ts](lib/authOptions.ts#L1)).
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` — Cloudinary credentials ([lib/cloudinary.ts](lib/cloudinary.ts#L1)).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Optional / notes
+- The admin seed script reads `MONGODB_URI` from `.env.local`; see [scripts/seedAdmin.ts](scripts/seedAdmin.ts#L1) for usage and defaults.
 
-## Learn More
+Seeding an initial admin user
 
-To learn more about Next.js, take a look at the following resources:
+Run the script once to create an initial admin account (change the defaults inside the file before running):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# with tsx
+npx tsx scripts/seedAdmin.ts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# or with ts-node
+npx ts-node --project tsconfig.json scripts/seedAdmin.ts
+```
 
-## Deploy on Vercel
+Scripts
+- `npm run dev` — start dev server
+- `npm run build` — production build
+- `npm run start` — start the built app
+- `npm run lint` — run ESLint
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project layout highlights
+- App and pages: `app/`
+- API routes: `app/api/` and `app/api/*`
+- Admin panel: `app/(admin)/admin/` and `app/(admin)/admin/login`
+- Server helpers and integrations: `lib/` (MongoDB, Cloudinary, auth)
+- Data models: `models/`
+- Seed script: [scripts/seedAdmin.ts](scripts/seedAdmin.ts#L1)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deployment
+- This project is compatible with Vercel; set the required environment variables in your deployment provider.
+
+Security notes
+- Keep `NEXTAUTH_SECRET` and Cloudinary API secrets out of source control. Use `.env.local` for local development and secure secret storage in production.
+
+Contributing
+- Open issues or PRs. For code style, follow existing TypeScript and ESLint rules.
+
+Questions or next steps
+- Want me to add a sample `.env.local.example` or commit these changes? I can add that next.
+
